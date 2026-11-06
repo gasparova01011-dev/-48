@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Дорога ополчения — игра ко Дню народного единства</title>
+<style>
+:root{--ink:#2a1f3d;--gold:#f2b134;--bg:#fff3d6;--card:#fff;--text:#2a1f3d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1830;--card:#2b2747;--text:#fff3d6}}
+:root[data-theme="dark"]{--bg:#1b1830;--card:#2b2747;--text:#fff3d6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:19px/1.45 "Trebuchet MS","Segoe UI",system-ui,sans-serif}
+#app{max-width:880px;margin:0 auto;padding:12px}
+.panel{background:var(--card);border:3px solid var(--ink);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 5px 0 var(--ink)}
+h1,h2{font-family:Georgia,"Times New Roman",serif;margin:.3em 0}
+h1{font-size:2em;color:#c8352f}
+.hero{width:100%;height:auto;display:block;border:3px solid var(--ink);border-radius:12px;margin-bottom:8px}
+.duo{width:100%;max-width:420px;height:auto;display:block;margin:0 auto}
+svg text{fill:currentColor;font-family:inherit}
+#road{width:100%;height:auto;display:block;color:var(--text)}
+#rl{text-align:center;font-weight:700}
+.btn{font:inherit;font-weight:800;min-height:54px;padding:10px 22px;border-radius:14px;border:3px solid var(--ink);background:var(--gold);color:#2a1f3d;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+button:focus-visible{outline:4px solid #1d6fe0;outline-offset:2px}
+.card,.opt{font:inherit;display:flex;gap:12px;align-items:center;width:100%;text-align:left;min-height:58px;margin:8px 0;padding:10px 14px;background:var(--card);color:var(--text);border:3px solid var(--ink);border-radius:14px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.opts .opt{margin:4px 0;font-weight:700}
+.bd{flex:none;width:36px;height:36px;border-radius:50%;background:var(--gold);color:#2a1f3d;display:grid;place-items:center;font-weight:800;border:2px solid #2a1f3d}
+.ok{background:#d6f3dc!important;color:#14301c!important}
+.ok .bd{background:#3f8f5a;color:#fff}
+.bad{background:#ffd9d6!important;color:#4a1210!important;cursor:default}
+.bad .bd{background:#c8352f;color:#fff}
+.opt:disabled{cursor:default}
+#msg{min-height:3.2em;font-weight:700}
+.shake{animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.q{font-size:1.1em;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card:hover,.opt:hover:not(:disabled),.tile:hover:not(:disabled){transform:translateY(-2px)}
+h2{border-bottom:4px solid var(--gold);padding-bottom:4px}
+.hero{box-shadow:0 5px 0 var(--ink)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.cols{grid-template-columns:1fr}}
+.sel{outline:4px solid #1d6fe0;outline-offset:2px}
+.tiles{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tile{font:inherit;font-size:1.5em;font-weight:800;min-width:56px;min-height:60px;border-radius:12px;border:3px solid var(--ink);background:var(--gold);color:#2a1f3d;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.tile:disabled{cursor:default}
+#wd{font-size:2em;font-weight:800;letter-spacing:.1em;min-height:1.6em}
+.cert{border:8px double #c8352f;outline:3px solid #f2b134;outline-offset:-14px;background:#fffaf0;color:#2a1f3d;padding:24px 18px;margin:14px 0;border-radius:10px;text-align:center}
+.ct{font:800 2.2em Georgia,serif;letter-spacing:.12em;color:#c8352f}
+.nm{font:700 1.7em Georgia,serif;border-bottom:2px solid #2a1f3d;display:inline-block;min-width:60%;margin:6px 0}
+.rs{margin:8px auto;border-collapse:collapse;text-align:left;font-size:.9em}
+.rs td{padding:3px 12px;border-bottom:1px dotted #8a7a6a}
+.dt{font-size:.9em}
+#nm{font:inherit;color:#2a1f3d;background:#fff;padding:8px 10px;border:3px solid var(--ink);border-radius:10px;max-width:100%}
+@media print{body *{visibility:hidden}.cert,.cert *{visibility:visible}.cert{position:absolute;left:0;top:0;width:100%;box-sizing:border-box}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fbdf0"/><stop offset="1" stop-color="#e3f2ff"/></linearGradient>
+<linearGradient id="gBrick" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e0503f"/><stop offset="1" stop-color="#a82a28"/></linearGradient>
+<linearGradient id="gRoof" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3fb27f"/><stop offset="1" stop-color="#1c6b4a"/></linearGradient>
+<linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffdc78"/><stop offset="1" stop-color="#e09a1a"/></linearGradient>
+<linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6cc07a"/><stop offset="1" stop-color="#3f8f5a"/></linearGradient>
+<linearGradient id="gSteel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f1f4f8"/><stop offset="1" stop-color="#9aa6b8"/></linearGradient>
+<pattern id="pBr" width="16" height="10" patternUnits="userSpaceOnUse"><rect width="16" height="10" fill="url(#gBrick)"/><path d="M0 5H16M8 0V5M0 5V10" stroke="#7d1d1c" stroke-width="1" opacity=".45" fill="none"/></pattern>
+<pattern id="pCob" width="22" height="8" patternUnits="userSpaceOnUse"><rect width="22" height="8" fill="#e8dcc0"/><path d="M0 0H22M11 0V8" stroke="#b9a883" stroke-width="1.2" fill="none"/></pattern>
+<g id="tree"><rect x="-3" y="-8" width="6" height="8" fill="#8a5a33" stroke="#2a1f3d" stroke-width="2"/><circle cy="-18" r="10" fill="#3f8f5a" stroke="#2a1f3d" stroke-width="2"/><circle cx="-4" cy="-21" r="4" fill="#fff" fill-opacity=".22"/></g>
+<pattern id="pMer" width="24" height="12" patternUnits="userSpaceOnUse"><rect x="4" y="1" width="15" height="12" fill="#c53b32" stroke="#2a1f3d" stroke-width="2"/></pattern>
+
+<g id="star" stroke="#a86a00" stroke-width="1.2"><polygon points="0,-9 2.1,-2.9 8.6,-2.8 3.4,1.1 5.3,7.3 0,3.6 -5.3,7.3 -3.4,1.1 -8.6,-2.8 -2.1,-2.9"/></g>
+
+<g id="dome" stroke="#2a1f3d" stroke-width="2.5">
+<path d="M0 0C-17-8-19-30 0-50C19-30 17-8 0 0Z"/>
+<path d="M0 0C17-8 19-30 0-50Z" fill="#2a1f3d" fill-opacity=".22" stroke="none"/><path d="M0 0C-7-12-7-34 0-50M0 0C7-12 7-34 0-50" fill="none" stroke-opacity=".28" stroke-width="1.6"/>
+<path d="M-10-9C-13-22-9-35-3-43" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+<path d="M0-50V-60M-4-56H4" fill="none" stroke="#e09a1a" stroke-width="2.5"/>
+</g>
+<g id="ch"><rect x="-15" y="0" width="30" height="55" fill="#f6efe0" stroke="#2a1f3d" stroke-width="2.5"/><rect x="3" y="0" width="12" height="55" fill="#2a1f3d" fill-opacity=".12"/><path d="M-5 30V18a5 5 0 0 1 10 0V30Z" fill="#2a1f3d"/><use href="#dome"/><rect x="-17" y="-3" width="34" height="7" rx="2" fill="url(#gGold)" stroke="#2a1f3d" stroke-width="2"/></g>
+
+<g id="tw">
+<rect x="-26" y="-70" width="52" height="70" fill="url(#pBr)" stroke="#2a1f3d" stroke-width="2.5"/>
+<rect x="-30" y="-78" width="60" height="9" fill="#f6efe0" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M-8-8V-30a8 8 0 0 1 16 0V-8Z" fill="#2a1f3d"/>
+<rect x="-20" y="-118" width="40" height="40" fill="url(#pBr)" stroke="#2a1f3d" stroke-width="2.5"/>
+<circle cy="-98" r="12" fill="#fff6e0" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M0-98V-106M0-98L6-95" stroke="#2a1f3d" stroke-width="2" stroke-linecap="round"/>
+<polygon points="-24,-118 24,-118 0,-172" fill="url(#gRoof)" stroke="#2a1f3d" stroke-width="2.5" stroke-linejoin="round"/>
+<polygon points="-24,-118 0,-118 0,-172" fill="#fff" fill-opacity=".2"/>
+<use href="#star" fill="url(#gGold)" transform="translate(0 -182)"/>
+</g>
+<g id="tw2">
+<rect x="-18" y="-58" width="36" height="58" fill="url(#pBr)" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M-5-8V-24a5 5 0 0 1 10 0V-8Z" fill="#2a1f3d"/>
+<polygon points="-23,-58 23,-58 0,-98" fill="url(#gRoof)" stroke="#2a1f3d" stroke-width="2.5" stroke-linejoin="round"/>
+<polygon points="-23,-58 0,-58 0,-98" fill="#fff" fill-opacity=".2"/>
+</g>
+
+<g id="scene">
+<rect width="600" height="220" fill="url(#gSky)"/>
+<ellipse cx="90" cy="38" rx="42" ry="13" fill="#fff" opacity=".85"/><ellipse cx="118" cy="30" rx="26" ry="11" fill="#fff" opacity=".85"/>
+<circle cx="548" cy="44" r="22" fill="url(#gGold)" stroke="#2a1f3d" stroke-width="2.5"/><ellipse cx="460" cy="62" rx="34" ry="11" fill="#fff" opacity=".85"/><path d="M0 150C70 110 140 120 210 140S360 110 450 130 560 120 600 135V200H0Z" fill="#8fcf92" stroke="#2a1f3d" stroke-width="2"/><path d="M0 172C100 142 200 162 300 152S500 142 600 162V200H0Z" fill="#6cc07a" stroke="#2a1f3d" stroke-width="2"/>
+<use href="#ch" fill="#c8352f" transform="translate(190 92)"/>
+<use href="#ch" fill="#2b6cc4" transform="translate(232 112) scale(.85)"/>
+<use href="#ch" fill="url(#gGold)" transform="translate(410 92)"/>
+<use href="#ch" fill="#2fa36b" transform="translate(368 112) scale(.85)"/>
+<rect y="140" width="600" height="56" fill="url(#pBr)" stroke="#2a1f3d" stroke-width="2.5"/>
+<rect y="129" width="600" height="12" fill="url(#pMer)"/><rect y="141" width="600" height="7" fill="#2a1f3d" fill-opacity=".2"/><rect y="186" width="600" height="10" fill="#f6efe0" stroke="#2a1f3d" stroke-width="2.5"/><g fill="#2a1f3d"><path d="M24 178V168a6 6 0 0 1 12 0V178Z"/><path d="M154 178V168a6 6 0 0 1 12 0V178Z"/><path d="M214 178V168a6 6 0 0 1 12 0V178Z"/><path d="M374 178V168a6 6 0 0 1 12 0V178Z"/><path d="M434 178V168a6 6 0 0 1 12 0V178Z"/><path d="M564 178V168a6 6 0 0 1 12 0V178Z"/></g>
+<use href="#tw2" transform="translate(95 196)"/><use href="#tw2" transform="translate(505 196)"/>
+<use href="#tw" transform="translate(300 196)"/>
+<rect y="196" width="600" height="8" fill="url(#gGreen)"/>
+<rect y="204" width="600" height="16" fill="url(#pCob)"/>
+</g>
+
+<g id="minin"><ellipse cy="2" rx="32" ry="5" fill="#2a1f3d" fill-opacity=".2"/>
+<path d="M-26 0C-28-30-20-48 0-50C20-48 28-30 26 0Z" fill="#c8352f" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M-22-6C-23-30-17-44-6-48L-6-6Z" fill="#fff" fill-opacity=".18"/>
+<rect x="-26" y="-24" width="52" height="7" fill="url(#gGold)" stroke="#2a1f3d" stroke-width="2"/>
+<circle cy="-66" r="16" fill="#f3c9a0" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M-15-62C-15-38 15-38 15-62C9-52-9-52-15-62Z" fill="#8a5a33" stroke="#2a1f3d" stroke-width="2"/>
+<circle cx="-6" cy="-70" r="2" fill="#2a1f3d"/><circle cx="6" cy="-70" r="2" fill="#2a1f3d"/><circle cx="-10" cy="-65" r="3" fill="#f08a7a" fill-opacity=".6"/><circle cx="10" cy="-65" r="3" fill="#f08a7a" fill-opacity=".6"/>
+<path d="M-17-76C-17-96 17-96 17-76Z" fill="#2b6cc4" stroke="#2a1f3d" stroke-width="2.5"/>
+<rect x="-19" y="-80" width="38" height="8" rx="3" fill="#fff6e0" stroke="#2a1f3d" stroke-width="2"/><g transform="rotate(-12 28 -30)"><rect x="19" y="-46" width="14" height="34" rx="4" fill="#fff6e0" stroke="#2a1f3d" stroke-width="2"/><path d="M22-38H30M22-32H30M22-26H30" stroke="#8a5a33" stroke-width="1.5"/></g><circle cx="26" cy="-20" r="5" fill="#f3c9a0" stroke="#2a1f3d" stroke-width="2"/>
+</g>
+<g id="pozh"><ellipse cy="2" rx="32" ry="5" fill="#2a1f3d" fill-opacity=".2"/>
+<path d="M-26 0C-28-30-20-48 0-50C20-48 28-30 26 0Z" fill="#2b6cc4" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M-22-6C-23-30-17-44-6-48L-6-6Z" fill="#fff" fill-opacity=".18"/>
+<rect x="-26" y="-24" width="52" height="7" fill="url(#gGold)" stroke="#2a1f3d" stroke-width="2"/>
+<circle cy="-66" r="16" fill="#f3c9a0" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M-12-58C-12-44 12-44 12-58C6-52-6-52-12-58Z" fill="#5b3a22" stroke="#2a1f3d" stroke-width="2"/>
+<circle cx="-6" cy="-69" r="2" fill="#2a1f3d"/><circle cx="6" cy="-69" r="2" fill="#2a1f3d"/><circle cx="-10" cy="-64" r="3" fill="#f08a7a" fill-opacity=".6"/><circle cx="10" cy="-64" r="3" fill="#f08a7a" fill-opacity=".6"/><path d="M-4-62Q0-59 4-62" fill="none" stroke="#2a1f3d" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M-17-74C-17-88-8-96 0-106C8-96 17-88 17-74Z" fill="url(#gSteel)" stroke="#2a1f3d" stroke-width="2.5"/>
+<path d="M0-106V-114" stroke="#e09a1a" stroke-width="3" stroke-linecap="round"/>
+<rect x="-2.5" y="-74" width="5" height="10" fill="#9aa6b8" stroke="#2a1f3d" stroke-width="1.5"/>
+<circle cx="26" cy="-26" r="21" fill="#c8352f" stroke="#2a1f3d" stroke-width="3"/>
+<circle cx="26" cy="-26" r="13" fill="none" stroke="#f2b134" stroke-width="3"/>
+<circle cx="26" cy="-26" r="6" fill="url(#gGold)" stroke="#2a1f3d" stroke-width="2"/><path d="M-34-64V-26" stroke="#2a1f3d" stroke-width="7" stroke-linecap="round"/><path d="M-34-64V-26" stroke="url(#gSteel)" stroke-width="4" stroke-linecap="round"/><rect x="-42" y="-28" width="16" height="5" rx="2" fill="url(#gGold)" stroke="#2a1f3d" stroke-width="1.8"/><circle cx="-34" cy="-18" r="5" fill="#f3c9a0" stroke="#2a1f3d" stroke-width="2"/>
+</g>
+</defs>
+</svg>
+
+<div id="app">
+  <div class="panel">
+    <svg id="road" viewBox="0 0 600 104" role="img" aria-label="Дорога от Нижнего Новгорода к Москве, по ней идёт ополчение">
+      <path id="roadpath" d="M40 72C140 20 240 100 340 58S520 30 560 66" fill="none" stroke="#2a1f3d" stroke-width="18" stroke-linecap="round"/>
+      <path d="M40 72C140 20 240 100 340 58S520 30 560 66" fill="none" stroke="#e8c898" stroke-width="12" stroke-linecap="round"/>
+      <path d="M40 72C140 20 240 100 340 58S520 30 560 66" fill="none" stroke="#fff6e0" stroke-width="2" stroke-dasharray="6 8"/><use href="#tree" transform="translate(100 98)"/><use href="#tree" transform="translate(205 98)"/><use href="#tree" transform="translate(285 30)"/><use href="#tree" transform="translate(405 96)"/><use href="#tree" transform="translate(470 26)"/><use href="#tree" transform="translate(525 98)"/>
+      <g transform="translate(22 66)"><rect x="-13" y="-14" width="26" height="14" fill="#f6efe0" stroke="#2a1f3d" stroke-width="2"/><polygon points="-16,-14 16,-14 0,-28" fill="#c8352f" stroke="#2a1f3d" stroke-width="2" stroke-linejoin="round"/><rect x="-3" y="-9" width="6" height="9" fill="#2a1f3d"/></g>
+      <use href="#tw2" transform="translate(574 66) scale(.5)"/>
+      <text x="4" y="100" font-size="12" font-weight="700">Нижний Новгород</text>
+      <text x="596" y="100" font-size="12" font-weight="700" text-anchor="end">Москва</text>
+      <g id="mk"><path d="M0 0V-32" stroke="#2a1f3d" stroke-width="3" stroke-linecap="round"/><path d="M1-32L24-25L1-17Z" fill="#c8352f" stroke="#2a1f3d" stroke-width="2" stroke-linejoin="round"/><circle r="5" fill="url(#gGold)" stroke="#2a1f3d" stroke-width="2"/></g>
+    </svg>
+    <div id="rl" aria-live="polite"></div>
+  </div>
+  <div class="panel" id="stage"></div>
+</div>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var stage=$('#stage'),road=$('#roadpath'),mk=$('#mk'),TOTAL=25,ROUNDS=7;
+var done=0,mistakes=0,mkPos=0,rnd=0,lastM=0,roundErr=[];
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var HERO='<svg class="hero" viewBox="0 0 600 220" role="img" aria-label="Кремль с башней-звездой и храмами"><use href="#scene"/></svg>';
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function pick(a,n){return shuffle(a).slice(0,n)}
+function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+function T(n){return 'Задание '+rnd+' из '+ROUNDS+'. '+n}
+function shake(b){b.classList.add('shake');setTimeout(function(){b.classList.remove('shake')},450)}
+function setProg(n){
+  var L=road.getTotalLength(),from=mkPos,to=n/TOTAL,t0=performance.now(),d=reduce?0:500;
+  $('#rl').textContent='Путь ополчения: '+n+' из '+TOTAL;
+  (function f(t){
+    var k=d?Math.min(1,(t-t0)/d):1,p=from+(to-from)*k,pt=road.getPointAtLength(L*p);
+    mk.setAttribute('transform','translate('+pt.x+' '+pt.y+')');
+    if(k<1)requestAnimationFrame(f);else mkPos=to;
+  })(t0);
+}
+function nextBtn(label,fn){var b=document.createElement('button');b.className='btn';b.textContent=label;b.onclick=fn;$('#nx').appendChild(b);b.focus()}
+function nextRound(){if(rnd>0){roundErr[rnd-1]=mistakes-lastM;lastM=mistakes}if(rnd<ROUNDS){rnd++;rounds[rnd-1]()}else finish()}
+function start(){
+  done=0;mistakes=0;mkPos=0;rnd=0;lastM=0;roundErr=[];setProg(0);
+  stage.innerHTML=HERO+'<h1>Дорога ополчения</h1><p>Осень 1612 года. Страна переживает Смутное время, и жители русских городов решают освободить Москву. Помоги ополчению дойти до столицы: выполни 7 заданий, и флаг дойдёт до Кремля!</p><p>Каждый раз вопросы подбираются заново, поэтому играть интересно снова и снова.</p><button class="btn" id="go">Начать поход</button>';
+  $('#go').onclick=nextRound;
+}
+
+var EV=['В стране смута: нет царя, а в Москве хозяйничают польско-литовские отряды.',
+'Патриарх Гермоген призывает русских людей встать на защиту Родины.',
+'В Нижнем Новгороде староста Кузьма Минин призывает собрать ополчение.',
+'Нижегородцы собирают деньги и оружие. Войско возглавляет князь Дмитрий Пожарский.',
+'Ополчение идёт к Москве и останавливается в Ярославле, где собирает новые силы.',
+'Осенью 1612 года ополченцы освобождают Москву.',
+'В 1613 году Земский собор избирает царя Михаила Романова.'];
+function r1(){
+  var ord=pick([0,1,2,3,4,5,6],5).sort(function(a,b){return a-b}),next=0;
+  stage.innerHTML='<h2>'+T('Что за чем?')+'</h2><p>Нажимай на события по порядку: от самого раннего к самому позднему.</p><div id="list"></div><p id="msg" role="status"></p><div id="nx"></div>';
+  shuffle(ord).forEach(function(e){
+    var b=document.createElement('button');b.className='card';
+    b.innerHTML='<span class="bd">?</span><span>'+EV[e]+'</span>';
+    b.onclick=function(){
+      if(b.disabled)return;
+      if(e===ord.slice().sort(function(a,c){return a-c})[next]){
+        b.disabled=true;b.classList.add('ok');b.querySelector('.bd').textContent=(next+1)+'✓';
+        next++;done++;setProg(done);
+        if(next===5){$('#msg').textContent='Верно! Ты правильно выстроил цепочку событий.';nextBtn('Дальше',nextRound)}
+        else $('#msg').textContent='Верно! Что было следом?';
+      }else{mistakes++;shake(b);$('#msg').textContent='Это случилось позже. Что произошло раньше?'}
+    };
+    $('#list').appendChild(b);
+  });
+}
+
+function quiz(title,intro,fig,qs,shuf,after){
+  var k=0;
+  function show(){
+    var q=qs[k],idx=q.o.map(function(_,i){return i});if(shuf)idx=shuffle(idx);
+    stage.innerHTML='<h2>'+title+'</h2>'+(k===0?'<p>'+intro+'</p>':'')+fig+'<p>Вопрос '+(k+1)+' из '+qs.length+'</p><p class="q">'+q.q+'</p><div class="opts" id="opts"></div><p id="msg" role="status"></p><div id="nx"></div>';
+    idx.forEach(function(i){
+      var b=document.createElement('button');b.className='opt';
+      b.innerHTML='<span class="bd">•</span><span>'+q.o[i]+'</span>';
+      b.onclick=function(){
+        if(i===q.a){
+          b.classList.add('ok');b.querySelector('.bd').textContent='✓';
+          document.querySelectorAll('#opts .opt').forEach(function(x){x.disabled=true});
+          done++;setProg(done);$('#msg').textContent='Верно! '+q.e;
+          nextBtn('Дальше',function(){k++;if(k<qs.length)show();else after()});
+        }else{mistakes++;b.disabled=true;b.classList.add('bad');b.querySelector('.bd').textContent='✗';$('#msg').textContent='Пока не то. Подсказка: '+q.h}
+      };
+      $('#opts').appendChild(b);
+    });
+  }
+  show();
+}
+
+var WHO=[
+['Был земским старостой в Нижнем Новгороде и первым призвал собирать ополчение.',0,'Староста — человек, которого выбирают горожане.','Это Кузьма Минин.'],
+['Князь и опытный воевода, который командовал войском ополчения.',1,'Воеводой стал князь, а не староста.','Войско возглавил князь Дмитрий Пожарский.'],
+['Вместе вели народное ополчение к Москве.',2,'В этом вопросе подходят сразу два имени.','Минин и Пожарский действовали вместе.'],
+['Собирал деньги и помощь для войска у горожан.',0,'Это забота старосты, который призвал к сбору.','Сбором средств занимался Кузьма Минин.'],
+['Был ранен в боях за Москву в 1611 году, а позже возглавил поход.',1,'Ранение получил военный командир.','Это князь Дмитрий Пожарский.'],
+['Жил в Нижнем Новгороде и торговал на рынке.',0,'Князь не торговал на рынке: это был простой горожанин.','Это Кузьма Минин.'],
+['Им поставлен памятник на Красной площади.',2,'Памятник стоит двум героям сразу.','Памятник поставлен им обоим.'],
+['Происходил из древнего княжеского рода.',1,'Слово «князь» здесь главное.','Это князь Дмитрий Пожарский.']];
+function r2(){
+  var fig='<svg class="duo" viewBox="0 0 300 134" role="img" aria-label="Кузьма Минин со свитком и Дмитрий Пожарский в шлеме с мечом и щитом"><g transform="translate(85 108)"><use href="#minin"/></g><g transform="translate(205 108)"><use href="#pozh"/></g><text x="85" y="128" font-size="12" font-weight="700" text-anchor="middle">Кузьма Минин</text><text x="205" y="128" font-size="12" font-weight="700" text-anchor="middle">Дмитрий Пожарский</text></svg>';
+  var O=['Минин','Пожарский','Оба героя'];
+  quiz(T('Кто есть кто?'),'Выбери героя, о котором говорится в вопросе.',fig,pick(WHO,4).map(function(w){return{q:w[0],o:O,a:w[1],h:w[2],e:w[3]}}),false,nextRound);
+}
+
+var TF=[
+['В ополчении 1612 года собрались люди из разных городов и сословий.',true,'Да, это было народное ополчение.'],
+['Москву освободили от захватчиков в 1812 году.',false,'В 1812 году была война с Наполеоном, а Москву освободили в 1612 году.'],
+['Памятник Минину и Пожарскому открыли в 1818 году.',true,'Да, его создал скульптор Иван Мартос.'],
+['День народного единства отмечают 4 ноября.',true,'Да, этот праздник приходится на 4 ноября.'],
+['Кузьма Минин был царём.',false,'Нет, он был нижегородским старостой. Царём позже стал Михаил Романов.'],
+['День народного единства отмечают только в Москве.',false,'Нет, праздник отмечают по всей России.'],
+['Памятник Минину и Пожарскому стоит перед собором Василия Блаженного.',true,'Да, он стоит на Красной площади.'],
+['Дмитрий Пожарский был старостой, а Кузьма Минин — князем.',false,'Наоборот: Минин был старостой, а Пожарский — князем.']];
+function r3(){
+  quiz(T('Правда или миф?'),'Реши, правда это или миф.','',pick(TF,4).map(function(t){return{q:t[0],o:['Правда','Миф'],a:t[1]?0:1,h:'Вспомни рассказ о 1612 годе и подумай ещё раз.',e:t[2]}}),false,nextRound);
+}
+
+var PAIRS=[['Ополчение','народное войско из добровольцев'],['Воевода','военный начальник'],['Староста','выборный представитель горожан'],['Смута','время бед и безвластия в государстве'],['Единство','когда люди вместе ради общего дела'],['Кремль','древняя крепость в центре Москвы'],['Памятник','скульптура в честь героев'],['Захватчики','враги, пришедшие на чужую землю']];
+function r4(){
+  var P=pick(PAIRS,4),sel=null,got=0;
+  stage.innerHTML='<h2>'+T('Слова и значения')+'</h2><p>Нажми на слово слева, а затем на его значение справа.</p><div class="cols"><div id="L"></div><div id="R"></div></div><p id="msg" role="status"></p><div id="nx"></div>';
+  function mkb(txt,i,left){
+    var b=document.createElement('button');b.className='card';b.innerHTML='<span class="bd">•</span><span>'+txt+'</span>';
+    b.onclick=function(){
+      if(b.disabled)return;
+      if(left){
+        if(sel){sel.b.classList.remove('sel');sel.b.querySelector('.bd').textContent='•'}
+        sel={b:b,i:i};b.classList.add('sel');b.querySelector('.bd').textContent='▶';
+      }else if(!sel){$('#msg').textContent='Сначала выбери слово слева.'}
+      else if(sel.i===i){
+        [sel.b,b].forEach(function(x){x.disabled=true;x.classList.remove('sel');x.classList.add('ok');x.querySelector('.bd').textContent='✓'});
+        sel=null;got++;done++;setProg(done);$('#msg').textContent='Верно!';
+        if(got===4){$('#msg').textContent='Верно! Все пары найдены.';nextBtn('Дальше',nextRound)}
+      }else{mistakes++;shake(b);sel.b.classList.remove('sel');sel.b.querySelector('.bd').textContent='•';sel=null;$('#msg').textContent='Не совпало. Подумай о значении слова и попробуй ещё раз.'}
+    };
+    $(left?'#L':'#R').appendChild(b);
+  }
+  P.forEach(function(p,i){mkb(p[0],i,true)});
+  shuffle(P.map(function(p,i){return i})).forEach(function(i){mkb(P[i][1],i,false)});
+}
+
+var QZ=[
+['Какого числа в России отмечают День народного единства?',['4 ноября','1 января','9 мая'],'Это осенний праздник.','Праздник отмечают 4 ноября.'],
+['Где стоит памятник Минину и Пожарскому?',['На Красной площади в Москве','На Невском проспекте','На Поклонной горе'],'Памятник стоит в городе, который освобождало ополчение.','Памятник стоит в Москве, возле собора Василия Блаженного.'],
+['Что помогло победить в 1612 году?',['Люди из разных городов объединились ради общей цели','Помощь иностранной армии','Один непобедимый богатырь'],'Название праздника подсказывает ответ.','В единстве — сила!'],
+['В каком году ополчение освободило Москву?',['1612','1812','1941'],'С тех пор прошло больше 400 лет.','Это был 1612 год.'],
+['Из какого города вышло ополчение?',['Из Нижнего Новгорода','Из Санкт-Петербурга','Из Казани'],'Этот город стоит на Волге и Оке.','Ополчение собралось в Нижнем Новгороде.'],
+['Какой город был главной целью похода?',['Москва','Киев','Смоленск'],'Это столица, где находится Кремль.','Целью была Москва.'],
+['С какого года День народного единства стал государственным праздником?',['С 2005 года','С 1991 года','С 2020 года'],'Это было в начале XXI века.','Праздник отмечают с 2005 года.'],
+['Кто создал памятник Минину и Пожарскому?',['Скульптор Иван Мартос','Художник Михаил Врубель','Скульптор Пётр Клодт'],'Скульптор жил в XIX веке.','Памятник создал Иван Мартос.'],
+['Рядом с каким собором стоит памятник на Красной площади?',['С собором Василия Блаженного','С Исаакиевским собором','С Казанским собором'],'У этого собора разноцветные купола.','Памятник стоит у собора Василия Блаженного.']];
+function r5(){
+  quiz(T('Знаток праздника'),'Выбери правильный ответ.','',pick(QZ,4).map(function(t){return{q:t[0],o:t[1],a:0,h:t[2],e:t[3]}}),true,nextRound);
+}
+
+var W=[['ЕДИНСТВО','Когда люди вместе ради общего дела'],['ОПОЛЧЕНИЕ','Народное войско из добровольцев'],['КРЕМЛЬ','Древняя крепость в центре Москвы'],['ПАМЯТНИК','Скульптура в честь героев'],['ВОЕВОДА','Военный начальник, например князь Пожарский'],['ПОХОД','Дальний путь войска к цели']];
+function r6(){
+  var ws=pick(W,2),k=0;
+  function show(){
+    var w=ws[k][0],g='';
+    stage.innerHTML='<h2>'+T('Собери слово')+'</h2><p>Нажимай на буквы по порядку и собери слово.</p><p class="q">Подсказка: '+ws[k][1]+'</p><div id="wd" aria-live="polite"></div><div class="tiles" id="tl"></div><p id="msg" role="status"></p><div id="nx"></div>';
+    function draw(){var s=g;for(var i=g.length;i<w.length;i++)s+='_';$('#wd').textContent=s.split('').join(' ')}
+    draw();
+    shuffle(w.split('')).forEach(function(c){
+      var b=document.createElement('button');b.className='tile';b.textContent=c;
+      b.onclick=function(){
+        if(b.disabled)return;
+        if(c===w.charAt(g.length)){
+          g+=c;b.disabled=true;b.classList.add('ok');draw();
+          if(g.length===w.length){done++;setProg(done);$('#msg').textContent='Верно! Получилось слово «'+w+'».';nextBtn('Дальше',function(){k++;if(k<ws.length)show();else nextRound()})}
+        }else{mistakes++;shake(b);$('#msg').textContent='Эта буква здесь не подходит. Попробуй другую.'}
+      };
+      $('#tl').appendChild(b);
+    });
+  }
+  show();
+}
+
+function mq(text,c,h,e){
+  var ds=shuffle([c+10,c-10,c+100,c-100,c+1,c-1,c+5]).filter(function(x){return x>0&&x!==c}).slice(0,2);
+  return{q:text,o:[String(c),String(ds[0]),String(ds[1])],a:0,h:h,e:e+' Ответ: '+c+'.'};
+}
+function r7(){
+  var y=new Date().getFullYear(),c=y-1612,a=ri(4,9),b=[20,30,40,50][ri(0,3)],d=ri(3,7),km=[15,20,25,30][ri(0,3)],x=ri(12,40)*100,z=ri(5,20)*100;
+  var gens=[
+    function(){return mq('Из одного города в ополчение пришло '+a+' отрядов по '+b+' человек. Сколько всего ополченцев пришло?',a*b,'Одинаковые группы — значит, нужно умножать.',a+' × '+b+'.')},
+    function(){return mq('Ополчение проходило по '+km+' км в день. Сколько километров оно прошло за '+d+' дней?',km*d,'Одинаковый путь каждый день — умножай.',km+' × '+d+'.')},
+    function(){return mq('Нижегородцы собрали '+x+' рублей, а потом ещё '+z+' рублей. Сколько рублей собрали всего?',x+z,'«Всего» значит сложить.',x+' + '+z+'.')}];
+  quiz(T('Задачи ополчения'),'Реши задачи. Подсказка появится, если ошибёшься.','',[mq('Ополчение освободило Москву в 1612 году. Сколько лет прошло с тех пор до '+y+' года?',c,'Из текущего года вычти 1612.',y+' − 1612.'),gens[ri(0,2)]()],true,nextRound);
+}
+var rounds=[r1,r2,r3,r4,r5,r6,r7];
+
+function finish(){
+  var s=mistakes<=5?3:mistakes<=12?2:1;
+  var title=['','Ополченец','Воевода','Герой единства!'][s],stars='';
+  for(var i=0;i<3;i++)stars+='<use href="#star" fill="'+(s>i?'url(#gGold)':'#cfc8d8')+'" transform="translate('+(30+45*i)+' 26) scale(2.4)"/>';
+  var RN=['Хронология','Кто есть кто','Правда или миф','Слова и значения','Знаток праздника','Собери слово','Задачи ополчения'],rows='';
+  for(var r=0;r<ROUNDS;r++){var e=roundErr[r]||0;rows+='<tr><td>'+(r+1)+'. '+RN[r]+'</td><td>'+(e?'ошибок: '+e:'без ошибок ✓')+'</td></tr>'}
+  stage.innerHTML=HERO+'<h2>Москва освобождена!</h2><p>Впиши своё имя, и грамота будет готова.</p><label for="nm">Имя ученика: </label><input id="nm" maxlength="30" placeholder="Например, Аня" autocomplete="off">'+
+  '<div class="cert" id="cert"><div class="ct">ГРАМОТА</div><svg viewBox="0 0 240 70" width="240" role="img" aria-label="Кремлёвская башня и храмы"><use href="#ch" fill="#c8352f" transform="translate(52 36) scale(.55)"/><use href="#ch" fill="#2b6cc4" transform="translate(188 36) scale(.55)"/><use href="#tw" transform="translate(120 68) scale(.34)"/></svg>'+
+  '<p>за участие в походе народного ополчения и знание истории Дня народного единства награждается</p><div class="nm" id="who">ученик 4 класса</div><p>Звание: <b>'+title+'</b></p>'+
+  '<svg viewBox="0 0 150 52" width="170" role="img" aria-label="Звёзд: '+s+' из 3">'+stars+'</svg><table class="rs">'+rows+'</table>'+
+  '<p>Заданий выполнено: '+ROUNDS+' из '+ROUNDS+'. Всего ошибок: '+mistakes+'. Звёзд: '+s+' из 3.</p><p class="dt">'+new Date().toLocaleDateString('ru-RU')+'</p></div>'+
+  '<div class="row"><button class="btn" id="pr">Распечатать грамоту</button><button class="btn" id="again">Играть снова</button></div>';
+  $('#again').onclick=start;
+  $('#nm').oninput=function(){$('#who').textContent=this.value.trim()||'ученик 4 класса'};
+  $('#pr').onclick=function(){try{window.print()}catch(err){}};
+}
+start();
+})();
+</script>
+</body>
+</html>
